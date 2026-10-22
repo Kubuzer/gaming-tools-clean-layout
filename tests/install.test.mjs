@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, copyFileSync, writeFileSync, readFileSync, existsSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, copyFileSync, writeFileSync, readFileSync, existsSync, rmSync, realpathSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -10,9 +10,10 @@ import { createHash } from 'node:crypto';
 const source = dirname(dirname(fileURLToPath(import.meta.url)));
 const engine = process.env.CLEAN_LAYOUT_POWERSHELL || 'powershell.exe';
 function fixture(t) {
-  const temp = mkdtempSync(join(tmpdir(), 'gt-layout-'));
+  const tempBase = realpathSync.native(tmpdir());
+  const temp = mkdtempSync(join(tempBase, 'gt-layout-'));
   t.after(() => {
-    assert.equal(dirname(temp), tmpdir());
+    assert.equal(dirname(temp), tempBase);
     assert.ok(basename(temp).startsWith('gt-layout-'));
     rmSync(temp, { recursive: true, force: true });
   });
