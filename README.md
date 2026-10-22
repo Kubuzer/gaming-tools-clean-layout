@@ -36,7 +36,9 @@ This project follows the minimal approach and documentation style of [TH.GL Clea
 
 **2.** Download this repository as a ZIP using **Code → Download ZIP**, extract it to a permanent, writable folder, and review the scripts. Keep this folder in place after setup.
 
-**3.** Open **Windows PowerShell** in that folder. Administrator access is **not required**.
+**3.** Double-click **Install.cmd**. Administrator access is **not required**. Read the result, then press a key to close setup.
+
+For command-line setup:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
@@ -79,7 +81,7 @@ The connection is a debugger interface: other programs on the same PC may be abl
 
 ## Remove or disable
 
-Close Companion, then run from the same folder:
+Close Companion, then double-click **Uninstall.cmd**, or run from the same folder:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Uninstall

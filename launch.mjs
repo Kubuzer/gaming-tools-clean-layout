@@ -87,7 +87,10 @@ try {
     throw new Error('Unexpected debugger address.');
   }
   socket = new WebSocket(wsUrl);
-  await once(socket, 'open');
+  await once(socket, 'open', { signal: AbortSignal.timeout(5000) }).catch(error => {
+    if (error.name === 'AbortError') throw new Error('Timed out connecting to Companion. Close Companion and try again.');
+    throw error;
+  });
   let id = 0;
   const pending = new Map();
   const command = (method, params = {}) => new Promise((resolve, reject) => {
@@ -145,7 +148,7 @@ try {
   console.error(error.message);
   spawn('powershell.exe', ['-NoProfile', '-Command',
     "Add-Type -AssemblyName System.Windows.Forms; " +
-    "[System.Windows.Forms.MessageBox]::Show('Could not apply Clean Layout. See launcher.log beside launch.mjs. Close Companion before trying again; run install.ps1 again if paths changed.', 'gaming.tools CSS')"],
-    { stdio: 'ignore', windowsHide: true });
+    "[System.Windows.Forms.MessageBox]::Show($env:CLEAN_LAYOUT_ERROR + [Environment]::NewLine + [Environment]::NewLine + 'Could not apply Clean Layout. See launcher.log beside launch.mjs. Close Companion before trying again; run install.ps1 again if paths changed.', 'gaming.tools CSS')"],
+    { stdio: 'ignore', windowsHide: true, env: { ...process.env, CLEAN_LAYOUT_ERROR: String(error.message) } });
   process.exitCode = 1;
 }
