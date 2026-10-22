@@ -1,0 +1,23 @@
+name: Checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        powershell: [powershell.exe, pwsh.exe]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Syntax and isolated installer tests
+        shell: pwsh
+        env:
+          CLEAN_LAYOUT_POWERSHELL: ${{ matrix.powershell }}
+        run: |
+          node --check launch.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node --test tests/install.test.mjs

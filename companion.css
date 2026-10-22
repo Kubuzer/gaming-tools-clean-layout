@@ -1,0 +1,9 @@
+/* Hide the complete advertising column, including its reserved width. */
+aside[class~="w-[310px]"][class~="shrink-0"] {
+  display: none !important;
+}
+
+/* Keep wheel/touchpad scrolling, without a visible scrollbar. */
+main {
+  scrollbar-width: none !important;
+}
